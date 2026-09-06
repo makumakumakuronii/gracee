@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Little Graceful World for Grace</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root{
+  --sky:#a9e5ff; --grass:#73b94a; --grass2:#9bd45e; --dirt:#8b5a2b;
+  --wood:#b9783e; --woodDark:#70401e; --gold:#ffd83d; --goldDark:#c99a00;
+  --paper:#fff8cf; --ink:#493400; --shadow:#302000;
+}
+*{box-sizing:border-box}
+html,body{margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Press Start 2P", monospace;}
+body{
+  background:linear-gradient(#a9e5ff 0 55%,#73b94a 55% 100%);
+  overflow-x:hidden;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;z-index:0;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.15) 7px 8px),
+    repeating-linear-gradient(90deg,transparent 0 7px,rgba(0,0,0,.08) 7px 8px);
+}
+.cloud{position:fixed;background:#fff;opacity:.9;box-shadow:16px 0 #fff,32px 0 #fff,16px -12px #fff; width:32px;height:12px;z-index:0}
+.c1{top:11%;left:7%}.c2{top:22%;right:12%;transform:scale(1.3)}.c3{top:7%;left:53%;transform:scale(.7)}
+.world{position:relative;z-index:1;width:min(960px,94%);margin:auto;padding:28px 0 70px}
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;gap:15px;
+  background:#252525;color:#fff;padding:12px 15px;border:4px solid #111;
+  box-shadow:7px 7px #111;font-size:10px;line-height:1.7;
+}
+.hearts{white-space:nowrap;color:#ffdf3d;text-shadow:2px 2px #8a6200;font-size:14px}
+.screen{
+  margin-top:25px;background:rgba(255,248,207,.96);border:6px solid #3f2b00;
+  box-shadow:10px 10px rgba(48,32,0,.45);min-height:590px;overflow:hidden;
+}
+.nav{
+  display:flex;flex-wrap:wrap;background:#b9783e;border-bottom:6px solid #70401e;
+}
+.nav button{
+  flex:1;min-width:150px;padding:15px 10px;border:0;border-right:3px solid #70401e;
+  background:#a86632;color:#fff;font:9px "Press Start 2P";cursor:pointer;
+  text-shadow:2px 2px #493400;
+}
+.nav button:hover,.nav button.active{background:#d28c4e}
+.page{display:none;padding:35px}
+.page.active{display:block;animation:pop .25s steps(3)}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(18px,4vw,30px);line-height:1.6;margin:10px 0 18px}
+h2{font-size:15px;line-height:1.7}
+p{font:11px/2 "Press Start 2P", monospace}
+.subtitle{font:10px/2;color:#775800}
+.pixel-box{
+  border:5px solid #493400;background:#fffdf0;box-shadow:7px 7px #493400;
+  padding:25px;margin:25px 0;
+}
+.btn{
+  border:4px solid #493400;background:var(--gold);color:#493400;
+  box-shadow:5px 5px #493400;padding:14px 16px;
+  font:9px "Press Start 2P";cursor:pointer;margin:8px 5px 8px 0;
+}
+.btn:hover{filter:brightness(1.08);transform:translate(2px,2px);box-shadow:3px 3px #493400}
+.btn:active{transform:translate(5px,5px);box-shadow:none}
+.letter{
+  display:none;background:#fff9d9;border:4px solid #9e7920;padding:24px;
+  box-shadow:inset 0 0 0 4px #fff0a1;
+}
+.letter.open{display:block;animation:open .45s steps(5)}
+@keyframes open{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
+.sign{font:15px "Press Start 2P";margin-top:22px}
+.book{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.song{
+  background:#f9eaa4;border:5px solid #493400;box-shadow:6px 6px #493400;padding:20px;
+}
+.song h3{font-size:11px;line-height:1.7;margin:0 0 12px}
+.song p{font-size:14px;margin:8px 0}
+.song .bar{height:14px;background:#c9ad52;border:3px solid #493400;margin:15px 0}
+.song .fill{height:100%;width:35%;background:#ffd83d}
+.memories{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.memory{
+  min-height:170px;padding:18px;background:#d6a15d;border:5px solid #70401e;
+  box-shadow:6px 6px #493400;cursor:pointer;position:relative;
+}
+.memory:before{content:"";position:absolute;inset:7px;border:2px dashed #70401e;pointer-events:none}
+.memory h3{font-size:10px;line-height:1.6;margin:4px 0 15px}
+.memory p{font-size:13px;line-height:1.6}
+.secret{
+  display:none;margin-top:18px;padding:15px;background:#fff9d9;border:4px solid #493400;
+  font:11px/2 "Press Start 2P", monospace;
+}
+.memory.revealed .secret{display:block}
+.memory.revealed{background:#ffe68a}
+.crafting{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:7px;width:190px;margin:30px auto;
+}
+.block{height:58px;border:3px solid #493400;background:#73b94a;box-shadow:inset 5px 5px rgba(255,255,255,.25),inset -5px -5px rgba(0,0,0,.2)}
+.block:nth-child(2),.block:nth-child(5),.block:nth-child(8){background:#ffd83d}
+.footer{text-align:center;color:#fff;font-size:8px;line-height:2;text-shadow:2px 2px #493400;margin-top:25px}
+.toast{
+  position:fixed;left:50%;bottom:25px;transform:translateX(-50%) translateY(120px);
+  background:#252525;color:#fff;border:4px solid #111;padding:14px 18px;
+  font-size:9px;z-index:10;transition:.3s;box-shadow:5px 5px #111;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+.night-intro{text-align:center;padding:10px 0 25px}
+.moon{font-size:65px;display:inline-block;filter:drop-shadow(0 0 12px rgba(255,216,61,.7));animation:moonFloat 3s steps(4) infinite}
+@keyframes moonFloat{50%{transform:translateY(-7px)}}
+.night-box{background:linear-gradient(135deg,#fff9d9,#ffe276)}
+.final-note{display:none;margin-top:22px;padding:25px;background:#fffdf0;border:5px solid #493400;box-shadow:7px 7px #493400;animation:appearNight .6s steps(5)}
+.final-note.show{display:block}
+@keyframes appearNight{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.pixel-sun{font-size:40px;text-align:center;margin-bottom:15px;text-shadow:4px 4px #c99a00}
+@media(max-width:700px){
+  .book,.memories{grid-template-columns:1fr}
+  .page{padding:22px}
+  .nav button{min-width:50%;font-size:8px}
+}
+</style>
+</head>
+<body>
+<div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+
+<div class="world">
+  <div class="topbar">
+    <span>☀️ Grace's</span>
+    <span class="hearts" id="hearts">♥ ♥ ♥ ♥ ♥</span>
+  </div>
+
+  <div class="screen">
+    <nav class="nav">
+      <button class="active" data-page="home">HOME</button>
+      <button data-page="songs">JUKEBOX</button>
+      <button data-page="memories">BOOK</button>
+      <button data-page="aftertext">LAST</button>
+    </nav>
+
+    <section class="page active" id="home">
+      <div style="text-align:center">
+        <div class="crafting">
+          <div class="block"></div><div class="block"></div><div class="block"></div>
+          <div class="block"></div><div class="block"></div><div class="block"></div>
+          <div class="block"></div><div class="block"></div><div class="block"></div>
+        </div>
+        <h1>hai, baby Grace ‎𖹭</h1>
+        <div class="subtitle">u found this tiny little world just i made just for u</div>
+      </div>
+
+      <div class="pixel-box">
+        <h2>A LETTER HAS SPAWNED</h2>
+        <p>Click me to open</p>
+        <button class="btn" id="openLetter">OPEN LETTER</button>
+        <button class="btn" id="secretBtn">???</button>
+
+        <div class="letter" id="letter">
+          <p>
+            HAII, baby, princess, Grace, mahal ko!!!<br><br>
+            i wanted to make u something instead of just sending u
+            another message, so i made this instead
+            <br><br>
+            it isn't much. it's just a collection of songs,
+            things i remember, and a bunch of yellow
+            bcs apparently, that's what happens when someone becomes
+            special to me (only made this just for u)
+            <br><br>
+            u don't have to do anything with this, baby ko. i just wanted u
+            to have a place that exists simply because i thought of u
+            <br><br>
+            i'm proud of u for still finding reasons to stay alive, my strong baby princess
+            thank u for existing, and thank u for being u
+          </p>
+          <div class="sign">— Pyo</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="songs">
+      <h1>the jukebox</h1>
+      <div class="subtitle">songs that i attached to u</div>
+
+      <div class="book">
+        <div class="song">
+          <h2>All of Me</h2>
+          <p><b>John Legend</b></p>
+          <p><i><u>You're my downfall,</i></u></p>
+          <p><i><u>you're my muse</i></u></p>
+          <p><i><u>My worst distraction,</i></u></p>
+          <p><i><u>my rhythm and blues"</i></u></p>
+          <p>this song is just so emotionally earnest huhu</p>
+          <p>u're simultaneously the person who cud make me the happiest</p>
+          <p>and the person capable of hurting me the most</p>
+          <p>u're my inspiration, my distraction, my comfort, and my weakness</p>
+          <p>all at once</p>
+          <div class="bar"><div class="fill"></div></div>
+          <a href="https://youtu.be/450p7goxZqg?si=T_jjRdj3MK3yRrsZ&t=116" target="_blank">
+            click
+           </a>
+        </div>
+
+        <div class="song">
+          <h2>Diwata</h2>
+          <p><b>Abra</b></p>
+          <p><i><u>Panaginip lang kita,</i></u></p>
+          <p><i><u>kaya gusto kong antukin..</i></u></p>
+          <p><i><u>..Walang hiling na kapalit,</i></u></p>
+          <p><i><u>gusto lang kitang mahalin"</i></u></p>
+          <p>masyado na explanatory yung lyrics, baby</p>
+          <p>u already feel unreal to me</p>
+          <p>bcs of the feelings and moments we shared</p>
+          <p>that felt too good to be true a</p>
+          <p>even if it was a dream,</p>
+          <p>even if idk san tayo patungo</p>
+          <p>i'm happy na i got to feel that way with u</p>
+          <div class="bar"><div class="fill" style="width:62%"></div></div>
+          <a href="https://youtu.be/9QcIo20wok0?si=A0N4dgpFAw_ieR3W&t=172" target="_blank">
+            click
+           </a>
+        </div>
+
+        <div class="song">
+          <h2>Pause</h2>
+          <p><b>eaJ</b></p>
+          <p><i><u>Lazy days on your sofa</i></u></p>
+          <p><i><u>Laugh our way to the coffee shop</i></u></p>
+          <p><i><u>Little things,</i></u></p>
+          <p><i><u>that's all I want with you</i></u></p>
+          <p>the part abt the little things</p>
+          <p>reminds me of how i js wanna</p>
+          <p>spend simple, ordinary moments with u</p>
+          <p>js being together and enjoying</p>
+          <p>each other's company</p>
+          <p>is enough for mee</p>
+          <div class="bar"><div class="fill" style="width:48%"></div></div>
+          <a href="https://youtu.be/N2kz9EOtIPQ?si=WBPdLli9X-Xk_6eX" target="_blank">
+            click
+           </a> 
+        </div>
+
+        <div class="song">
+          <h2>Pillow</h2>
+          <p><b>eaJ, keshi</b></p>
+          <p><i><u>Way too many options,</i></u></p>
+          <p><i><u>you need something constant,</i></u></p>
+          <p><i><u>you need something that</i></u></p>
+          <p><i><u>that you can hold on to</i></u></p>
+          <p><i><u>'til then I'll hold on to you</i></u></p>
+          <p>“[write your little explanation here]”</p>
+          <div class="bar"><div class="fill" style="width:79%"></div></div>
+          <button class="btn play" data-song="SONG FOUR">▶ PLAY</button>
+        </div>
+      </div>
+
+      <div class="pixel-box">
+        <h2>NOTE</h2>
+        <p>I'll add more here in the future:]</p>
+      </div>
+    </section>
+
+    <section class="page" id="memories">
+      <h1>📖 things i remember</h1>
+      <div class="subtitle">click each block. some things are hidden inside.</div>
+
+      <div class="memories">
+        <div class="memory">
+          <h3>🌧️ THE NICKNAME</h3>
+          <p>There is a reason “ulan” stuck.</p>
+          <div class="secret">because somehow, even a rainy word became something warm. 💛</div>
+        </div>
+
+        <div class="memory">
+          <h3>🎀 THE LITTLE DETAILS</h3>
+          <p>Click me.</p>
+          <div class="secret">[add one of those tiny details you remember that she probably doesn't realize you noticed]</div>
+        </div>
+
+        <div class="memory">
+          <h3>🌻 THE THING I LIKE</h3>
+          <p>Click me.</p>
+          <div class="secret">[write something about her personality, kindness, habits, or one of your favorite things about her]</div>
+        </div>
+
+        <div class="memory">
+          <h3>💗 THE MEMORY</h3>
+          <p>Click me.</p>
+          <div class="secret">[put a specific moment you two shared here]</div>
+        </div>
+
+        <div class="memory">
+          <h3>⭐ THE RANDOM ONE</h3>
+          <p>Click me.</p>
+          <div class="secret">[an inside joke, random conversation, or oddly specific thing you remember]</div>
+        </div>
+
+        <div class="memory">
+          <h3>🔒 SECRET CHEST</h3>
+          <p>Click me.</p>
+          <div class="secret">okay fine. you are very, very easy to remember.</div>
+        </div>
+      </div>
+    </section>
+    <section class="page" id="aftertext">
+      <div class="night-intro">
+        <div class="moon">🌙</div>
+        <h1>late aftertext</h1>
+        <div class="subtitle">written after everything else was already finished.</div>
+      </div>
+      <div class="pixel-box night-box">
+        <h2>🕯️ ONE MORE THING...</h2>
+        <p>
+          okay, so technically the website is done.<br><br>
+          but i kept thinking there was something i hadn't said yet.
+          maybe there isn't a perfect way to say it, so i'll just leave this here instead.
+          <br><br>
+          if you ever come back to this little world, i hope you remember
+          that somebody once sat down and decided that you were worth
+          making an entire tiny pixel world for.
+          <br><br>
+          that's kind of it.<br>
+          that's also kind of a lot.
+        </p>
+        <button class="btn" id="aftertextBtn">THERE'S ONE MORE THING</button>
+        <div class="final-note" id="finalNote">
+          <div class="pixel-sun">☀</div>
+          <p>
+            you made an ordinary little corner of my life feel brighter.
+            <br><br>
+            so i guess yellow was the only possible color for this.
+            <br><br>
+            goodnight, ulan. 💛
+          </p>
+          <div class="sign">— end of the aftertext</div>
+        </div>
+      </div>
+      <div class="pixel-box">
+        <h2>🌌 SAVE POINT</h2>
+        <p>You made it all the way here.<br><br>There isn't another page after this one.<br><br>...probably.</p>
+        <button class="btn" id="backHome">↩ RETURN TO SPAWN</button>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="footer">Pyo 𖹭 Grace</div>
+</div>
+
+<div class="toast" id="toast">message</div>
+
+<script>
+const pages = document.querySelectorAll(".page");
+const navButtons = document.querySelectorAll(".nav button");
+
+function goTo(pageName){
+  pages.forEach(p => p.classList.toggle("active", p.id === pageName));
+  navButtons.forEach(b => b.classList.toggle("active", b.dataset.page === pageName));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+navButtons.forEach(btn => btn.addEventListener("click",()=>goTo(btn.dataset.page)));
+
+const letter = document.getElementById("letter");
+const openLetter = document.getElementById("openLetter");
+openLetter.addEventListener("click",()=>{
+  letter.classList.toggle("open");
+  openLetter.textContent = letter.classList.contains("open") ? "CLOSE LETTER" : "OPEN LETTER";
+  if(letter.classList.contains("open")) showToast("MWA");
+});
+
+document.getElementById("secretBtn").addEventListener("click",()=>{
+  showToast("HAI HEHEHEHEHHE");
+  document.getElementById("hearts").textContent = "♥ ♥ ♥ ♥ ♥";
+});
+
+document.querySelectorAll(".memory").forEach(card=>{
+  card.addEventListener("click",()=>{
+    card.classList.toggle("revealed");
+  });
+});
+
+
+const aftertextBtn=document.getElementById("aftertextBtn");
+const finalNote=document.getElementById("finalNote");
+if(aftertextBtn){aftertextBtn.addEventListener("click",()=>{finalNote.classList.toggle("show");aftertextBtn.textContent=finalNote.classList.contains("show")?"HIDE THE LAST NOTE":"THERE'S ONE MORE THING";if(finalNote.classList.contains("show"))showToast("🌙 you found the last note")})}
+const backHome=document.getElementById("backHome");
+if(backHome)backHome.addEventListener("click",()=>goTo("home"));
+
+document.querySelectorAll(".play").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const playing = btn.textContent.includes("STOP");
+    document.querySelectorAll(".play").forEach(b=>b.textContent="▶ PLAY");
+    if(!playing){
+      btn.textContent="■ STOP";
+      showToast("🎵 jukebox playing: " + btn.dataset.song);
+    }else{
+      showToast("jukebox stopped");
+    }
+  });
+});
+
+function showToast(message){
+  const toast=document.getElementById("toast");
+  toast.textContent=message;
+  toast.classList.add("show");
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>toast.classList.remove("show"),2200);
+}
+
+// Occasional floating pixel hearts.
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.textContent="💛";
+  h.style.position="fixed";
+  h.style.left=Math.random()*95+"vw";
+  h.style.bottom="-30px";
+  h.style.fontSize=(12+Math.random()*12)+"px";
+  h.style.zIndex="2";
+  h.style.pointerEvents="none";
+  h.style.transition="transform 5s linear, opacity 5s linear";
+  document.body.appendChild(h);
+  requestAnimationFrame(()=>{h.style.transform="translateY(-110vh)";h.style.opacity="0"});
+  setTimeout(()=>h.remove(),5200);
+},900);
+</script>
+</body>
+</html>
