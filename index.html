@@ -51,7 +51,7 @@ body:before{
 .nav button:hover,.nav button.active{background:#d28c4e}
 .page{display:none;padding:35px}
 .page.active{display:block;animation:pop .25s steps(3)}
-@keyframes popfrom{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 h1{font-size:clamp(18px,4vw,30px);line-height:1.6;margin:10px 0 18px}
 h2{font-size:15px;line-height:1.7}
 p{font:11px/2 "Press Start 2P", monospace}
@@ -72,7 +72,7 @@ p{font:11px/2 "Press Start 2P", monospace}
   box-shadow:inset 0 0 0 4px #fff0a1;
 }
 .letter.open{display:block;animation:open .45s steps(5)}
-@keyframes openfrom{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
+@keyframes open{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
 .sign{font:15px "Press Start 2P";margin-top:22px}
 .book{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
 .song{
@@ -148,7 +148,7 @@ p{font:11px/2 "Press Start 2P", monospace}
           <div class="block"></div><div class="block"></div><div class="block"></div>
           <div class="block"></div><div class="block"></div><div class="block"></div>
         </div>
-        <h1>hai, baby Grace ‎𖹭</h1>
+        <h1>hai, Grace ‎𖹭</h1>
         <div class="subtitle">u found this tiny little world i made just for u</div>
       </div>
 
@@ -271,7 +271,10 @@ p{font:11px/2 "Press Start 2P", monospace}
         </div>
       </div>
 
-         </div>
+      <div class="pixel-box">
+        <h2>NOTE</h2>
+        <p>7</p>
+      </div>
     </section>
 
     <section class="page" id="memories">
@@ -361,6 +364,9 @@ p{font:11px/2 "Press Start 2P", monospace}
           </div>
         </div>
 
+         <div class="pixel-box">
+          <h2>NOTE</h2>
+          <p>17, 27</p>
          </div>
       </div>
     </section>
@@ -368,12 +374,11 @@ p{font:11px/2 "Press Start 2P", monospace}
       <div class="night-intro">
         <div class="moon">🌙</div>
         <h1>Sep. 30, 2026</h1>
-        <div class="subtitle">if u're reading this, helo! hehehe:]</div>
+        <div class="subtitle">not expecting u to read this but if u are, HII</div>
       </div>
       <div class="pixel-box night-box">
         <h2>HI</h2>
-        <h3>added smth sa "one last thing po"</h3>
-        <h3>oh! i also added more sa jukebox if u havent seen it yet</h3>
+        <h3>added smth sa last</h3>
         <p>
           if u ever come back to this little world, i hope u remember
           that somebody once sat down and decided that u were worth
@@ -381,7 +386,7 @@ p{font:11px/2 "Press Start 2P", monospace}
           <br><br>
           that's kinda it
         </p>
-        <button class="btn" id="aftertextBtn">ONE LAST THING</button>
+        <button class="btn" id="aftertextBtn">click meh to read</button>
         <div class="final-note" id="finalNote">
           <div class="pixel-sun">☀</div>
           <p>
@@ -403,13 +408,13 @@ p{font:11px/2 "Press Start 2P", monospace}
             <br><br>
             but hey, u may have not kept that promise, but i’ll keep mine:]]]]
             <br>
-            u can always chat me whenever you feel alone. kahit matagal pa ’yan (if i didnt reply, im prolly dead), u know how to reach me namann
+            u can always chat me whenever you feel alone. kahit matagal pa ’yan (if i didnt reply, im prolly dead so rip xP), u know how to reach me namann
             <br><br>
             i genuinely hope u’re okay, princess:]
             <br>
             and PLEASE! DON'T HURT URSELF
             <br><br>
-            until then, princess!:]
+            until then, princess bff!:]
           </p>
           <div class="sign">— Pyo</div>
         </div>
@@ -423,7 +428,7 @@ p{font:11px/2 "Press Start 2P", monospace}
 
   </div>
 
-  <div class="footer">Pyo 𖹭 Grace</div>
+  <div class="footer">𖹭Grace</div>
 </div>
 
 <div class="toast" id="toast">message</div>
@@ -486,6 +491,7 @@ function showToast(message){
   window.toastTimer=setTimeout(()=>toast.classList.remove("show"),2200);
 }
 
+// Occasional floating pixel hearts.
 setInterval(()=>{
   const h=document.createElement("div");
   h.textContent="💛";
